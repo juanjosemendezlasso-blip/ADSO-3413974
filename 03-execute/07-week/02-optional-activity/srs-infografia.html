@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRS – Especificación de Requisitos de Software</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f0e8;
+    --cream: #ece7d8;
+    --accent: #d4410b;
+    --accent2: #1a56db;
+    --gold: #c8962a;
+    --muted: #6b6458;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 32px 0 24px;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 16px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 10vw, 96px);
+    line-height: 0.88;
+    letter-spacing: -1px;
+    color: var(--ink);
+  }
+
+  .title span {
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.6;
+    max-width: 220px;
+    text-align: right;
+  }
+
+  /* ── DEFINITION STRIP ── */
+  .def-strip {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 20px 28px;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .def-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .def-text {
+    font-size: 14px;
+    line-height: 1.7;
+    font-weight: 300;
+    border-left: 2px solid var(--accent);
+    padding-left: 20px;
+  }
+
+  .def-text strong {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* ── GRID SECTIONS ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    border: 1px solid var(--ink);
+    padding: 24px;
+    position: relative;
+    background: var(--paper);
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .card.accent-top { border-top: 4px solid var(--accent); }
+  .card.accent-top2 { border-top: 4px solid var(--accent2); }
+  .card.accent-gold { border-top: 4px solid var(--gold); }
+  .card.filled {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .card.filled .card-title { color: var(--accent); }
+  .card.filled .card-num { color: #ffffff22; }
+
+  .card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    color: var(--cream);
+    line-height: 1;
+    position: absolute;
+    top: 12px;
+    right: 18px;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.03em;
+    margin-bottom: 10px;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .card-body {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .card.filled .card-body { color: #b8b4ae; }
+
+  /* ── SECTION HEADERS ── */
+  .sec-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .sec-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+  }
+
+  .sec-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  .sec-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── IEEE 830 STRUCTURE BLOCK ── */
+  .ieee-block {
+    border: 1px solid var(--ink);
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  .ieee-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .ieee-header span {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .ieee-row {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    border-bottom: 1px solid var(--cream);
+  }
+
+  .ieee-row:last-child { border-bottom: none; }
+
+  .ieee-num {
+    background: var(--cream);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--ink);
+    font-weight: 700;
+  }
+
+  .ieee-content {
+    padding: 12px 16px;
+  }
+
+  .ieee-content strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .ieee-content p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── REQUIREMENTS TYPES ── */
+  .req-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .req-badge {
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border: 1.5px solid;
+    text-transform: uppercase;
+    min-width: 80px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .badge-func { border-color: var(--accent); color: var(--accent); }
+  .badge-nfunc { border-color: var(--accent2); color: var(--accent2); }
+  .badge-iface { border-color: var(--gold); color: var(--gold); }
+  .badge-constr { border-color: var(--muted); color: var(--muted); }
+
+  .req-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-top: 3px;
+  }
+
+  .req-desc strong { color: var(--ink); }
+
+  /* ── QUALITIES BOX ── */
+  .qualities {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    animation: fadeUp 0.5s 0.15s ease both;
+  }
+
+  .q-item { text-align: center; }
+
+  .q-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .q-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .q-desc {
+    font-size: 11px;
+    color: #8a8680;
+    line-height: 1.5;
+  }
+
+  /* ── PROCESO ── */
+  .process {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .proc-step {
+    flex: 1;
+    border: 1px solid var(--ink);
+    border-right: none;
+    padding: 18px 14px;
+    position: relative;
+  }
+
+  .proc-step:last-child { border-right: 1px solid var(--ink); }
+
+  .proc-arrow {
+    position: absolute;
+    right: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 13px solid var(--ink);
+  }
+
+  .proc-n {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .proc-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .proc-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 4px solid var(--ink);
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+  }
+
+  .footer-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--muted);
+  }
+
+  .footer-ref {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  /* ── ANIMATE ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 620px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .qualities { grid-template-columns: repeat(2, 1fr); }
+    .process { flex-direction: column; }
+    .proc-step { border-right: 1px solid var(--ink); border-bottom: none; }
+    .proc-step:last-child { border-bottom: 1px solid var(--ink); }
+    .proc-arrow { display: none; }
+    .header { grid-template-columns: 1fr; }
+    .subtitle { text-align: left; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="tag">Ingeniería de Software · Documento clave</div>
+      <div class="title">S<span>R</span>S</div>
+      <div class="tag" style="margin-top:8px; margin-bottom:0;">Especificación de Requisitos de Software</div>
+    </div>
+    <div class="subtitle">
+      El contrato técnico entre<br>cliente, usuario y equipo<br>de desarrollo
+    </div>
+  </header>
+
+  <!-- DEFINITION -->
+  <div class="def-strip">
+    <div class="def-label">¿Qué<br>es?</div>
+    <div class="def-text">
+      Un <strong>SRS (Software Requirements Specification)</strong> es el documento formal que describe
+      <strong>qué debe hacer</strong> un sistema de software, <strong>bajo qué condiciones</strong> debe operar y
+      <strong>qué restricciones</strong> debe cumplir — sin prescribir cómo implementarlo.
+      Es la base del contrato entre stakeholders y desarrolladores.
+    </div>
+  </div>
+
+  <!-- OBJETIVOS -->
+  <div class="sec-header">
+    <div class="sec-label">Objetivos</div>
+    <div class="sec-line"></div>
+    <div class="sec-num">01</div>
+  </div>
+  <div class="grid-3" style="margin-bottom:40px;">
+    <div class="card accent-top">
+      <div class="card-num">01</div>
+      <div class="card-title">Comunicar</div>
+      <div class="card-body">Establece un lenguaje común entre clientes, usuarios y desarrolladores, reduciendo malentendidos.</div>
+    </div>
+    <div class="card accent-top">
+      <div class="card-num">02</div>
+      <div class="card-title">Validar</div>
+      <div class="card-body">Permite verificar que el sistema construido cumple lo acordado antes de entrar a producción.</div>
+    </div>
+    <div class="card accent-top">
+      <div class="card-num">03</div>
+      <div class="card-title">Controlar</div>
+      <div class="card-body">Sirve de referencia para gestión del cambio, estimaciones de costo y planificación del proyecto.</div>
+    </div>
+  </div>
+
+  <!-- ESTRUCTURA IEEE 830 -->
+  <div class="sec-header">
+    <div class="sec-label">Estructura IEEE 830</div>
+    <div class="sec-line"></div>
+    <div class="sec-num">02</div>
+  </div>
+  <div class="ieee-block">
+    <div class="ieee-header">
+      Secciones del documento SRS
+      <span>ESTÁNDAR IEEE 830 / ISO/IEC 29148</span>
+    </div>
+    <div class="ieee-row">
+      <div class="ieee-num">1</div>
+      <div class="ieee-content">
+        <strong>Introducción</strong>
+        <p>Propósito, alcance, definiciones, acrónimos, referencias y visión general del documento.</p>
+      </div>
+    </div>
+    <div class="ieee-row">
+      <div class="ieee-num">2</div>
+      <div class="ieee-content">
+        <strong>Descripción General</strong>
+        <p>Perspectiva del producto, funciones principales, características del usuario, restricciones generales y supuestos.</p>
+      </div>
+    </div>
+    <div class="ieee-row">
+      <div class="ieee-num">3</div>
+      <div class="ieee-content">
+        <strong>Requisitos Específicos</strong>
+        <p>Requisitos funcionales, no funcionales, de interfaz, de rendimiento y restricciones de diseño. Es la sección más extensa.</p>
+      </div>
+    </div>
+    <div class="ieee-row">
+      <div class="ieee-num">4</div>
+      <div class="ieee-content">
+        <strong>Apéndices y Anexos</strong>
+        <p>Modelos adicionales, glosario extendido, diagramas, prototipos y cualquier información de soporte.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPOS DE REQUISITOS -->
+  <div class="sec-header">
+    <div class="sec-label">Tipos de Requisitos</div>
+    <div class="sec-line"></div>
+    <div class="sec-num">03</div>
+  </div>
+  <div style="margin-bottom:40px;">
+    <div class="req-row">
+      <div class="req-badge badge-func">Funcionales</div>
+      <div class="req-desc"><strong>¿Qué hace el sistema?</strong> Comportamientos, funciones, casos de uso. Ej: "El sistema debe permitir registrar usuarios con correo y contraseña."</div>
+    </div>
+    <div class="req-row">
+      <div class="req-badge badge-nfunc">No Funcionales</div>
+      <div class="req-desc"><strong>¿Cómo lo hace?</strong> Rendimiento, seguridad, disponibilidad, escalabilidad. Ej: "El sistema debe responder en menos de 2 segundos para el 95% de las solicitudes."</div>
+    </div>
+    <div class="req-row">
+      <div class="req-badge badge-iface">Interfaz</div>
+      <div class="req-desc"><strong>¿Con qué interactúa?</strong> Interfaces de usuario, hardware, software externo, comunicaciones. Ej: "El sistema debe integrarse con la API REST del ERP corporativo."</div>
+    </div>
+    <div class="req-row">
+      <div class="req-badge badge-constr">Restricciones</div>
+      <div class="req-desc"><strong>¿Bajo qué límites?</strong> Tecnológicos, legales, presupuestarios, normativos. Ej: "El sistema debe cumplir con la Ley 1581 de protección de datos de Colombia."</div>
+    </div>
+  </div>
+
+  <!-- CUALIDADES DE UN BUEN SRS -->
+  <div class="sec-header">
+    <div class="sec-label">Cualidades de un buen SRS</div>
+    <div class="sec-line"></div>
+    <div class="sec-num">04</div>
+  </div>
+  <div class="qualities">
+    <div class="q-item">
+      <span class="q-icon">◎</span>
+      <span class="q-name">Correcto</span>
+      <span class="q-desc">Cada requisito refleja fielmente la necesidad real del usuario o cliente.</span>
+    </div>
+    <div class="q-item">
+      <span class="q-icon">◈</span>
+      <span class="q-name">Inequívoco</span>
+      <span class="q-desc">Una sola interpretación posible. Sin ambigüedades ni términos vagos.</span>
+    </div>
+    <div class="q-item">
+      <span class="q-icon">◉</span>
+      <span class="q-name">Completo</span>
+      <span class="q-desc">Cubre todas las funciones, condiciones de entrada, salida y restricciones del sistema.</span>
+    </div>
+    <div class="q-item">
+      <span class="q-icon">▣</span>
+      <span class="q-name">Verificable</span>
+      <span class="q-desc">Cada requisito puede ser probado o validado con métodos definidos y medibles.</span>
+    </div>
+  </div>
+
+  <!-- PROCESO DE ELABORACIÓN -->
+  <div class="sec-header">
+    <div class="sec-label">Proceso de Elaboración</div>
+    <div class="sec-line"></div>
+    <div class="sec-num">05</div>
+  </div>
+  <div class="process">
+    <div class="proc-step">
+      <div class="proc-n">1</div>
+      <div class="proc-title">Elicitación</div>
+      <div class="proc-desc">Entrevistas, talleres, observación, prototipos para capturar necesidades.</div>
+      <div class="proc-arrow"></div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-n">2</div>
+      <div class="proc-title">Análisis</div>
+      <div class="proc-desc">Identificar conflictos, priorizar y clasificar los requisitos obtenidos.</div>
+      <div class="proc-arrow"></div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-n">3</div>
+      <div class="proc-title">Especificación</div>
+      <div class="proc-desc">Redactar el SRS con lenguaje formal, preciso y estructurado.</div>
+      <div class="proc-arrow"></div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-n">4</div>
+      <div class="proc-title">Validación</div>
+      <div class="proc-desc">Revisión con stakeholders para confirmar que el documento es correcto.</div>
+      <div class="proc-arrow"></div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-n">5</div>
+      <div class="proc-title">Gestión</div>
+      <div class="proc-desc">Control de cambios, trazabilidad y versionado durante todo el ciclo.</div>
+    </div>
+  </div>
+
+  <!-- ERRORES COMUNES vs BUENAS PRÁCTICAS -->
+  <div class="sec-header">
+    <div class="sec-label">Errores vs. Buenas Prácticas</div>
+    <div class="sec-line"></div>
+    <div class="sec-num">06</div>
+  </div>
+  <div class="grid-2" style="margin-bottom:48px;">
+    <div class="card filled">
+      <div class="card-title">❌ Errores Comunes</div>
+      <div class="card-body" style="font-size:12px; line-height:2;">
+        Requisitos vagos o ambiguos<br>
+        Mezclar soluciones con necesidades<br>
+        Ignorar stakeholders clave<br>
+        No versionar el documento<br>
+        Requisitos no verificables<br>
+        Omitir restricciones del negocio
+      </div>
+    </div>
+    <div class="card accent-gold">
+      <div class="card-title" style="color:var(--gold);">✔ Buenas Prácticas</div>
+      <div class="card-body" style="font-size:12px; line-height:2;">
+        Usar plantilla IEEE 830 o ISO 29148<br>
+        Priorizar con MoSCoW o Kano<br>
+        Involucrar usuarios reales<br>
+        Mantener trazabilidad completa<br>
+        Revisar con todos los stakeholders<br>
+        Actualizar ante cada cambio aprobado
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-label">SRS · Ing. de Software</div>
+    <div class="footer-ref">
+      IEEE Std 830-1998 / ISO/IEC/IEEE 29148:2018<br>
+      Infografía de referencia académica
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
