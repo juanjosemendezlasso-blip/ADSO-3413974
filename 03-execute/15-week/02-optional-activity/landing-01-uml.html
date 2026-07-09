@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Landing 1 · UML, contexto y tipos de diagramas</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <nav class="nav" aria-label="Navegación principal">
+    <a class="brand" href="index.html" aria-label="Inicio">
+      <span class="brand-mark">UML</span>
+      <span>Modelado SENA · schedule-sena</span>
+    </a>
+    <div class="nav-links">
+      <a href="landing-01-uml.html">1. UML</a>
+      <a href="landing-02-casos-uso.html">2. Casos de uso</a>
+      <a href="landing-03-clases.html">3. Clases</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero compact">
+  <div>
+    <span class="kicker">Landing 1 · Fundamentos</span>
+    <h1>UML aplicado al proyecto schedule-sena</h1>
+    <p class="lead">Esta landing introduce UML como lenguaje de modelado, diferencia diagramas estáticos y dinámicos, identifica los actores del contexto SENA y aterriza el proyecto de horarios como caso de estudio para el ambiente de formación.</p>
+  </div>
+  <aside class="hero-card">
+    <h2>Objetivo de aprendizaje</h2>
+    <p>Identificar qué se debe modelar antes de dibujar: actores, procesos, módulos, entidades, reglas y evidencias del sistema. Diferenciar diagramas estructurales de comportamentales y aplicarlos al contexto del proyecto.</p>
+  </aside>
+</section>
+
+<main class="main">
+
+  <section class="section grid two">
+    <article class="card">
+      <h2>¿Qué es UML?</h2>
+      <p>UML (Unified Modeling Language) es un lenguaje gráfico estándar para visualizar, especificar, construir y documentar artefactos de sistemas de software. Fue definido por el Object Management Group (OMG) y se usa en análisis, diseño y comunicación técnica.</p>
+      <p>En este taller UML se usa como herramienta práctica para comprender y comunicar el diseño del proyecto schedule-sena. No se estudia la especificación completa, sino los diagramas más relevantes para el contexto del proyecto.</p>
+      <p>Un diagrama UML bien construido permite al equipo validar requerimientos, detectar inconsistencias y justificar decisiones de diseño frente a instructores y coordinadores académicos.</p>
+    </article>
+    <article class="card">
+      <h2>Contexto técnico del proyecto</h2>
+      <p>El sistema schedule-sena gestiona la programación de horarios de formación para el SENA: asigna instructores a fichas en ambientes físicos durante rangos de tiempo definidos, evitando conflictos de disponibilidad.</p>
+      <div>
+        <span class="badge green">Ambiente de formación</span>
+        <span class="badge green">Instructor</span>
+        <span class="badge green">Ficha</span>
+        <span class="badge orange">Horario</span>
+        <span class="badge orange">Observación</span>
+        <span class="badge">Disponibilidad</span>
+      </div>
+      <p class="small"><strong>Inconsistencia técnica identificada:</strong> el PRD del proyecto declara MongoDB, pero el backend inspeccionado usa PostgreSQL. Esta inconsistencia debe reportarse en la documentación del aprendiz como observación técnica, sin modificar el proyecto.</p>
+    </article>
+  </section>
+
+  <section class="section">
+    <h2>Diagramas estáticos vs. diagramas dinámicos</h2>
+    <div class="grid two">
+      <article class="card highlight">
+        <h3>Diagramas estáticos o estructurales</h3>
+        <p>Representan la estructura del sistema en un momento dado. No muestran el tiempo ni el flujo de ejecución. Responden a la pregunta: <strong>¿cómo está organizado el sistema?</strong></p>
+        <ul class="list-clean">
+          <li><strong>Diagrama de clases:</strong> clases, atributos, métodos y relaciones del dominio.</li>
+          <li><strong>Diagrama de componentes:</strong> módulos del sistema y sus interfaces de comunicación.</li>
+          <li><strong>Diagrama de despliegue:</strong> cómo se distribuye el sistema en nodos físicos o virtuales.</li>
+          <li><strong>Diagrama de paquetes:</strong> agrupación lógica de elementos del modelo.</li>
+        </ul>
+        <p class="small">En schedule-sena: el diagrama de clases muestra Ambiente, Instructor, Ficha, Horario y sus relaciones estructurales.</p>
+      </article>
+      <article class="card highlight">
+        <h3>Diagramas dinámicos o comportamentales</h3>
+        <p>Representan el comportamiento del sistema a lo largo del tiempo: flujos, interacciones y estados. Responden a la pregunta: <strong>¿cómo se comporta el sistema?</strong></p>
+        <ul class="list-clean">
+          <li><strong>Diagrama de casos de uso:</strong> actores externos y funcionalidades que ofrece el sistema.</li>
+          <li><strong>Diagrama de secuencia:</strong> mensajes intercambiados entre objetos en un escenario concreto.</li>
+          <li><strong>Diagrama de actividad:</strong> flujo de trabajo o proceso paso a paso.</li>
+          <li><strong>Diagrama de estados:</strong> ciclo de vida de un objeto a través de sus estados posibles.</li>
+        </ul>
+        <p class="small">En schedule-sena: el diagrama de casos de uso muestra cómo el coordinador académico programa un horario.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Actores en el contexto SENA</h2>
+    <p class="lead">Los actores son personas, roles o sistemas externos que interactúan con el sistema. En schedule-sena se identifican los siguientes actores candidatos para analizar:</p>
+    <div class="grid four">
+      <article class="card">
+        <span class="badge green">Actor</span>
+        <h3>Coordinador académico</h3>
+        <p>Planifica y aprueba la programación de horarios. Asigna instructores a fichas y ambientes. Es el actor con mayor interacción con el núcleo del sistema.</p>
+      </article>
+      <article class="card">
+        <span class="badge orange">Actor</span>
+        <h3>Instructor</h3>
+        <p>Dicta clases según el horario asignado. Puede consultar su programación y registrar observaciones sobre horarios o novedades del proceso formativo.</p>
+      </article>
+      <article class="card">
+        <span class="badge">Actor</span>
+        <h3>Aprendiz</h3>
+        <p>Consulta el horario de su ficha de formación. En el alcance identificado del sistema, es actor de consulta; no modifica datos.</p>
+      </article>
+      <article class="card">
+        <span class="badge gray">Actor</span>
+        <h3>Administrador del sistema</h3>
+        <p>Gestiona la configuración base: ambientes, usuarios, programas de formación y datos maestros. Tiene acceso al módulo de administración.</p>
+      </article>
+    </div>
+    <p class="small">El aprendiz debe validar manualmente estos actores contra el alcance real del proyecto. No todos son obligatorios; justificar la inclusión o exclusión de cada uno.</p>
+  </section>
+
+  <section class="section grid two">
+    <article class="card">
+      <h2>Lectura del sistema antes de modelar</h2>
+      <p>Antes de abrir draw.io, el aprendiz debe responder estas cinco preguntas sobre el sistema:</p>
+      <div class="flow">
+        <div class="flow-step"><span class="num">1</span><strong>Contexto</strong><br>¿Qué problema resuelve el sistema?</div>
+        <div class="flow-step"><span class="num">2</span><strong>Actores</strong><br>¿Quién usa el sistema y con qué objetivo?</div>
+        <div class="flow-step"><span class="num">3</span><strong>Funciones</strong><br>¿Qué debe hacer el sistema?</div>
+        <div class="flow-step"><span class="num">4</span><strong>Dominio</strong><br>¿Qué conceptos del negocio aparecen?</div>
+        <div class="flow-step"><span class="num">5</span><strong>Reglas</strong><br>¿Qué restricciones existen?</div>
+      </div>
+    </article>
+    <article class="card">
+      <h2>Ejemplo orientador — mapa conceptual del sistema</h2>
+      <div class="svg-panel" aria-label="Esquema conceptual del sistema schedule-sena">
+        <svg viewBox="0 0 800 430" role="img" aria-hidden="true">
+          <rect x="40" y="40" width="720" height="350" rx="28" fill="#f8fafc" stroke="#d7deea"/>
+          <text x="70" y="88" font-size="24" font-weight="800" fill="#162033">Sistema schedule-sena</text>
+          <rect x="80" y="118" width="180" height="68" rx="16" fill="#eaf6f4" stroke="#0f766e"/>
+          <text x="115" y="159" font-size="19" font-weight="700" fill="#115e59">Ambientes</text>
+          <rect x="310" y="118" width="185" height="68" rx="16" fill="#eaf6f4" stroke="#0f766e"/>
+          <text x="340" y="159" font-size="19" font-weight="700" fill="#115e59">Instructores</text>
+          <rect x="545" y="118" width="160" height="68" rx="16" fill="#eaf6f4" stroke="#0f766e"/>
+          <text x="580" y="159" font-size="19" font-weight="700" fill="#115e59">Fichas</text>
+          <rect x="195" y="268" width="175" height="68" rx="16" fill="#fffbeb" stroke="#f59e0b"/>
+          <text x="233" y="309" font-size="19" font-weight="700" fill="#92400e">Horario</text>
+          <rect x="420" y="268" width="190" height="68" rx="16" fill="#fffbeb" stroke="#f59e0b"/>
+          <text x="447" y="309" font-size="19" font-weight="700" fill="#92400e">Observación</text>
+          <line x1="170" y1="186" x2="265" y2="268" stroke="#64748b" stroke-width="2"/>
+          <line x1="402" y1="186" x2="345" y2="268" stroke="#64748b" stroke-width="2"/>
+          <line x1="625" y1="186" x2="390" y2="268" stroke="#64748b" stroke-width="2"/>
+          <line x1="370" y1="302" x2="420" y2="302" stroke="#64748b" stroke-width="2" stroke-dasharray="5 4"/>
+        </svg>
+      </div>
+      <p class="small">Este gráfico solo ayuda a leer el contexto del sistema. No reemplaza el diagrama formal que debe construir el aprendiz en draw.io/diagrams.net.</p>
+    </article>
+  </section>
+
+  <section class="section card warning">
+    <h2>Taller 1 · Clasificación y alcance de modelado</h2>
+    <p><strong>Actividad de aprendizaje:</strong> identificar qué partes del proyecto schedule-sena deben representarse con diagramas estáticos y qué partes con diagramas dinámicos. Construir un mapa inicial del sistema y documentar los hallazgos manualmente.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Elemento SENA</th><th>Definición del taller</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Competencia</td><td>Pendiente: dato no suministrado.</td></tr>
+          <tr><td>RAP</td><td>Pendiente: dato no suministrado.</td></tr>
+          <tr><td>Actividad 1</td><td>Construir en draw.io/diagrams.net un mapa visual que clasifique los diagramas UML estáticos y dinámicos aplicables al sistema schedule-sena. Identificar qué módulo o concepto del proyecto pertenece a cada tipo de diagrama.</td></tr>
+          <tr><td>Actividad 2</td><td>Redactar en Word una descripción propia del sistema: qué problema resuelve, cuál es su alcance, qué módulos se identificaron y cuál es la inconsistencia técnica encontrada (MongoDB/PostgreSQL).</td></tr>
+          <tr><td>Evidencias</td><td>1) Archivo .drawio o exportación PDF/SVG del mapa de clasificación. 2) Documento Word con descripción manual del sistema.</td></tr>
+          <tr><td>Criterios de evaluación</td><td>Diferencia correctamente estructura y comportamiento; usa nombres del dominio SENA; no inventa módulos no identificados en el proyecto; reporta la inconsistencia técnica sin inventar solución.</td></tr>
+          <tr><td>Instrumento</td><td>Lista de chequeo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="checklist">
+      <label><input type="checkbox"> El mapa fue construido en draw.io/diagrams.net.</label>
+      <label><input type="checkbox"> El mapa diferencia secciones estáticas y dinámicas.</label>
+      <label><input type="checkbox"> Los conceptos del dominio SENA están nombrados correctamente.</label>
+      <label><input type="checkbox"> El documento Word fue redactado con lenguaje propio.</label>
+      <label><input type="checkbox"> La inconsistencia técnica está reportada como observación.</label>
+    </div>
+  </section>
+
+  <section class="section card">
+    <h2>Criterios de entrega</h2>
+    <ul class="list-clean">
+      <li>Archivo <code>.drawio</code> con el mapa de clasificación de diagramas UML.</li>
+      <li>Exportación del mapa en formato PDF o SVG.</li>
+      <li>Documento Word con descripción propia del sistema, alcance identificado y observación técnica.</li>
+      <li>Redacción personal; no copiar de fuentes externas ni generar automáticamente con IA.</li>
+      <li>Los nombres de módulos y conceptos deben corresponder al proyecto schedule-sena real.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <div class="rule">
+      <strong>Advertencia sobre uso de inteligencia artificial:</strong> la IA puede apoyar la comprensión de conceptos, pero no puede reemplazar la construcción manual del diagrama ni la redacción propia de la documentación. Si se detecta que la evidencia fue generada completamente por IA sin trabajo manual verificable, el aprendiz deberá realizar una actividad adicional de sustentación y ajuste manual.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="notice">
+      <strong>Reto final:</strong> después de leer esta landing, reflexiona: ¿qué diagrama UML construirías primero para comprender el sistema schedule-sena — uno estático o uno dinámico? ¿Por qué? Escribe tu respuesta en una hoja antes de consultar con un compañero o con el instructor.
+    </div>
+  </section>
+
+  <section class="section card">
+    <h2>Fuentes consultadas</h2>
+    <ul class="list-clean">
+      <li>Object Management Group · UML 2.5.1 specification overview.</li>
+      <li>IBM Developer · UML 2 class diagram and structural diagrams.</li>
+      <li>draw.io / diagrams.net · UML use case and class diagram documentation.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p><strong>Restricción académica:</strong> este material orienta el trabajo. El aprendiz debe construir manualmente los diagramas en draw.io/diagrams.net y diligenciar la documentación en Word usando la plantilla publicada. No se aceptan documentos completos generados por IA como evidencia principal.</p>
+  <p>© <span data-current-year></span> · Material de apoyo para ambiente de formación SENA.</p>
+</footer>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>

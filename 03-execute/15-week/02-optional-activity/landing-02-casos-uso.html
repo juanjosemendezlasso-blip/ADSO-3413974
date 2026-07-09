@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Landing 2 · Diagrama de casos de uso</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <nav class="nav" aria-label="Navegación principal">
+    <a class="brand" href="index.html" aria-label="Inicio">
+      <span class="brand-mark">UML</span>
+      <span>Modelado SENA · schedule-sena</span>
+    </a>
+    <div class="nav-links">
+      <a href="landing-01-uml.html">1. UML</a>
+      <a href="landing-02-casos-uso.html">2. Casos de uso</a>
+      <a href="landing-03-clases.html">3. Clases</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero compact">
+  <div>
+    <span class="kicker">Landing 2 · Requerimientos</span>
+    <h1>Diagrama de casos de uso para schedule-sena</h1>
+    <p class="lead">El diagrama de casos de uso representa qué funcionalidades espera ejecutar cada actor externo frente al sistema. En esta actividad se inicia por los actores y objetivos del negocio, no por pantallas ni tablas de base de datos.</p>
+  </div>
+  <aside class="hero-card">
+    <h2>Resultado esperado</h2>
+    <p>Un diagrama construido en draw.io/diagrams.net y una documentación en Word usando la plantilla publicada en esta landing. Mínimo tres casos de uso documentados con redacción propia.</p>
+  </aside>
+</section>
+
+<main class="main">
+
+  <section class="section grid two">
+    <article class="card">
+      <h2>Explicación técnica</h2>
+      <p>El diagrama de casos de uso es un diagrama comportamental UML que muestra la interacción entre actores externos y el sistema desde la perspectiva del usuario. No describe cómo se implementa una funcionalidad, sino qué valor genera para el actor.</p>
+      <ul class="list-clean">
+        <li><strong>Actor:</strong> rol externo que interactúa con el sistema. Se dibuja fuera del límite del sistema.</li>
+        <li><strong>Caso de uso:</strong> funcionalidad del sistema de valor para el actor. Se dibuja dentro del límite como elipse.</li>
+        <li><strong>Límite del sistema:</strong> rectángulo que encierra los casos de uso y separa interior de exterior.</li>
+        <li><strong>Asociación:</strong> línea entre actor y caso de uso que indica participación directa.</li>
+        <li><strong>Include:</strong> el caso base siempre incluye el comportamiento del caso incluido.</li>
+        <li><strong>Extend:</strong> el caso extensor agrega comportamiento opcional o condicionado al caso base.</li>
+      </ul>
+    </article>
+    <article class="card">
+      <h2>Buenas prácticas obligatorias</h2>
+      <ul class="list-clean">
+        <li>Definir el límite del sistema con nombre claro: <strong>schedule-sena</strong>.</li>
+        <li>Los actores siempre están fuera del límite del sistema.</li>
+        <li>Nombrar casos de uso con verbo + objeto: "Programar horario", "Consultar ficha".</li>
+        <li>Modelar el <strong>qué</strong> necesita el actor, no el <strong>cómo</strong> técnico interno.</li>
+        <li>Evitar casos de uso tipo CRUD genérico que no aporten objetivo de negocio.</li>
+        <li>Usar <em>include</em> solo cuando el comportamiento sea obligatorio y reutilizable.</li>
+        <li>Usar <em>extend</em> solo para comportamiento opcional o condicionado a una condición explícita.</li>
+        <li>No conectar actores entre sí ni usar flechas sin significado UML.</li>
+        <li>Mantener trazabilidad: cada caso de uso debe corresponder a una necesidad real identificada.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="section">
+    <h2>Actores candidatos para analizar</h2>
+    <p>Los actores deben validarse manualmente con el alcance del proyecto. El aprendiz debe justificar por qué incluye o excluye cada uno.</p>
+    <div class="grid four">
+      <article class="card">
+        <span class="badge green">Actor principal</span>
+        <h3>Coordinador académico</h3>
+        <p>Planifica la programación de horarios. Es el actor con mayor interacción: programa, modifica y consulta horarios de fichas e instructores.</p>
+      </article>
+      <article class="card">
+        <span class="badge orange">Actor principal</span>
+        <h3>Instructor</h3>
+        <p>Consulta su programación asignada. Puede registrar observaciones sobre un horario. Su disponibilidad condiciona la programación del coordinador.</p>
+      </article>
+      <article class="card">
+        <span class="badge">Actor secundario</span>
+        <h3>Aprendiz</h3>
+        <p>Consulta el horario de su ficha. En el alcance identificado del sistema, es actor de consulta con rol de solo lectura.</p>
+      </article>
+      <article class="card">
+        <span class="badge gray">Actor principal</span>
+        <h3>Administrador</h3>
+        <p>Gestiona datos maestros: ambientes, instructores, fichas y programas de formación. Configura la base operativa del sistema.</p>
+      </article>
+    </div>
+    <p class="small">Actor secundario posible: sistema de autenticación externo. Aplica solo si el sistema delega la autenticación a un servicio externo identificado en el proyecto.</p>
+  </section>
+
+  <section class="section">
+    <h2>Casos de uso orientadores — no son la solución completa</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Caso de uso</th>
+            <th>Actor primario probable</th>
+            <th>Propósito</th>
+            <th>Observación de alcance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Registrar ambiente de formación</td>
+            <td>Administrador / Coordinador</td>
+            <td>Crear y mantener los espacios físicos disponibles para formación.</td>
+            <td>Debe validar capacidad, tipo y estado del ambiente.</td>
+          </tr>
+          <tr>
+            <td>Gestionar instructor</td>
+            <td>Administrador / Coordinador</td>
+            <td>Mantener datos del instructor y tipo de contrato.</td>
+            <td>Contiene datos personales; verificar acceso según rol.</td>
+          </tr>
+          <tr>
+            <td>Registrar ficha</td>
+            <td>Administrador / Coordinador</td>
+            <td>Crear una ficha asociada a un programa y rango de fechas.</td>
+            <td>Debe validar número de aprendices y fechas de vigencia.</td>
+          </tr>
+          <tr>
+            <td>Programar horario</td>
+            <td>Coordinador</td>
+            <td>Asignar ambiente, instructor y ficha en una fecha y rango horario sin conflictos.</td>
+            <td>Debe evitar conflictos de ambiente e instructor simultáneo.</td>
+          </tr>
+          <tr>
+            <td>Consultar horario</td>
+            <td>Instructor / Aprendiz / Coordinador</td>
+            <td>Visualizar la programación de actividades según el rol del actor.</td>
+            <td>El actor y los permisos de vista deben justificarse en la documentación.</td>
+          </tr>
+          <tr>
+            <td>Registrar observación</td>
+            <td>Instructor / Coordinador</td>
+            <td>Agregar una nota, cambio o incidencia sobre un horario existente.</td>
+            <td>En el backend, las observaciones son inmutables una vez registradas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Esta tabla orienta el trabajo; no es la lista definitiva. El aprendiz debe validar, agregar o eliminar casos de uso según el análisis propio del proyecto.</p>
+  </section>
+
+  <section class="section grid two">
+    <article class="card">
+      <h2>Ejemplo parcial — no es la solución</h2>
+      <div class="svg-panel" aria-label="Ejemplo parcial de diagrama de casos de uso">
+        <svg viewBox="0 0 820 450" role="img" aria-hidden="true">
+          <rect x="255" y="35" width="510" height="385" rx="22" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+          <text x="425" y="70" font-size="21" font-weight="800" fill="#162033">schedule-sena</text>
+          <circle cx="95" cy="105" r="22" fill="white" stroke="#162033" stroke-width="3"/>
+          <line x1="95" y1="127" x2="95" y2="198" stroke="#162033" stroke-width="3"/>
+          <line x1="58" y1="156" x2="132" y2="156" stroke="#162033" stroke-width="3"/>
+          <line x1="95" y1="198" x2="62" y2="242" stroke="#162033" stroke-width="3"/>
+          <line x1="95" y1="198" x2="128" y2="242" stroke="#162033" stroke-width="3"/>
+          <text x="38" y="280" font-size="17" font-weight="700" fill="#162033">Coordinador</text>
+          <ellipse cx="495" cy="128" rx="125" ry="36" fill="#eaf6f4" stroke="#0f766e" stroke-width="2"/>
+          <text x="406" y="135" font-size="17" font-weight="700" fill="#115e59">Registrar ficha</text>
+          <ellipse cx="500" cy="228" rx="138" ry="36" fill="#eaf6f4" stroke="#0f766e" stroke-width="2"/>
+          <text x="403" y="235" font-size="17" font-weight="700" fill="#115e59">Programar horario</text>
+          <ellipse cx="510" cy="335" rx="152" ry="36" fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/>
+          <text x="404" y="342" font-size="17" font-weight="700" fill="#92400e">Validar conflictos</text>
+          <line x1="135" y1="156" x2="370" y2="128" stroke="#64748b" stroke-width="2"/>
+          <line x1="135" y1="156" x2="362" y2="228" stroke="#64748b" stroke-width="2"/>
+          <line x1="500" y1="264" x2="508" y2="299" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+          <polygon points="508,299 501,289 515,289" fill="#64748b"/>
+          <text x="518" y="290" font-size="14" fill="#64748b">«include»</text>
+        </svg>
+      </div>
+      <p class="small">Este ejemplo muestra la notación base con un actor y tres casos de uso. El aprendiz debe construir su propio diagrama completo con todos los actores y casos de uso identificados.</p>
+    </article>
+    <article class="card danger">
+      <h2>Uso de IA: regla de control</h2>
+      <p>La IA puede usarse para <strong>consultar conceptos y aclarar dudas puntuales</strong>. No puede usarse para producir la entrega final.</p>
+      <ul class="list-clean">
+        <li>No pegar casos de uso genéricos que no correspondan al proyecto schedule-sena.</li>
+        <li>No entregar plantillas diligenciadas con redacción artificial y uniforme.</li>
+        <li>No inventar módulos como matrícula, nómina, inventario o pagos si no están en el alcance identificado.</li>
+        <li>El diagrama debe construirse manualmente en draw.io/diagrams.net.</li>
+        <li>La documentación debe evidenciar criterio propio y coherencia con el proyecto real.</li>
+      </ul>
+      <p class="small">Si se detecta evidencia construida completamente por IA sin trabajo manual verificable, se asignará sustentación y actividad adicional.</p>
+    </article>
+  </section>
+
+  <section class="section card highlight">
+    <h2>Plantilla para documentar casos de uso en Word</h2>
+    <p>Copiar esta plantilla en Word y diligenciarla manualmente por cada caso de uso seleccionado. Documentar mínimo tres casos de uso. No entregar como texto generado automáticamente.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Campo</th><th>Contenido que debe diligenciar el aprendiz</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ID del caso de uso</td><td>CU-01, CU-02, CU-03…</td></tr>
+          <tr><td>Nombre</td><td>Verbo + objeto. Ejemplo: Programar horario.</td></tr>
+          <tr><td>Actor principal</td><td>Rol que inicia el caso de uso.</td></tr>
+          <tr><td>Actores secundarios</td><td>Otros roles o sistemas que participan en el caso de uso.</td></tr>
+          <tr><td>Objetivo</td><td>Resultado verificable esperado por el actor al completar el caso de uso.</td></tr>
+          <tr><td>Precondiciones</td><td>Condiciones que deben cumplirse antes de que el caso de uso inicie.</td></tr>
+          <tr><td>Disparador</td><td>Evento o acción del actor que inicia el caso de uso.</td></tr>
+          <tr><td>Flujo principal</td><td>Pasos numerados del escenario exitoso, desde que el actor inicia hasta que el sistema responde.</td></tr>
+          <tr><td>Flujos alternos</td><td>Variantes válidas del flujo principal que no representan error.</td></tr>
+          <tr><td>Excepciones</td><td>Errores o validaciones que impiden completar el caso de uso correctamente.</td></tr>
+          <tr><td>Postcondiciones</td><td>Estado del sistema después de que el caso de uso se ejecuta exitosamente.</td></tr>
+          <tr><td>Reglas de negocio</td><td>Restricciones y reglas del dominio identificadas en el proyecto schedule-sena.</td></tr>
+          <tr><td>Criterios de aceptación</td><td>Condiciones mínimas para considerar que el caso de uso está correctamente documentado.</td></tr>
+          <tr><td>Evidencia esperada</td><td>Nombre del archivo .drawio y del documento Word donde se documenta este caso de uso.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section card warning">
+    <h2>Taller 2 · Construcción de casos de uso</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Elemento SENA</th><th>Definición del taller</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Competencia</td><td>Pendiente: dato no suministrado.</td></tr>
+          <tr><td>RAP</td><td>Pendiente: dato no suministrado.</td></tr>
+          <tr><td>Actividad de aprendizaje</td><td>Elaborar el diagrama de casos de uso del proyecto schedule-sena en draw.io/diagrams.net y documentar mínimo tres casos de uso en Word usando la plantilla publicada en esta landing.</td></tr>
+          <tr><td>Evidencias</td><td>1) Archivo .drawio del diagrama de casos de uso. 2) Exportación PDF o SVG del diagrama. 3) Documento Word con la plantilla diligenciada manualmente para mínimo tres casos de uso.</td></tr>
+          <tr><td>Criterios de evaluación</td><td>Identifica actores correctos con justificación; define límite del sistema con nombre claro; usa nombres con verbo + objeto; aplica include/extend con justificación; documenta flujos verificables; no inventa funcionalidades fuera del alcance identificado.</td></tr>
+          <tr><td>Instrumento de evaluación</td><td>Lista de chequeo y rúbrica de cumplimiento.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="checklist">
+      <label><input type="checkbox"> El diagrama fue construido en draw.io/diagrams.net.</label>
+      <label><input type="checkbox"> Los actores están ubicados fuera del límite del sistema.</label>
+      <label><input type="checkbox"> Los casos de uso están dentro del límite del sistema.</label>
+      <label><input type="checkbox"> Cada caso de uso tiene nombre con verbo + objeto.</label>
+      <label><input type="checkbox"> La plantilla en Word está diligenciada con redacción propia para mínimo tres casos de uso.</label>
+    </div>
+  </section>
+
+  <section class="section card">
+    <h2>Criterios de entrega</h2>
+    <ul class="list-clean">
+      <li>Archivo <code>.drawio</code> con el diagrama de casos de uso completo.</li>
+      <li>Exportación del diagrama en formato PDF o SVG.</li>
+      <li>Documento Word con la plantilla diligenciada para mínimo tres casos de uso.</li>
+      <li>Justificación escrita de los actores incluidos y excluidos.</li>
+      <li>Los casos de uso deben corresponder al proyecto schedule-sena real, sin inventar funcionalidades.</li>
+      <li>La documentación debe ser redacción propia, no texto generado automáticamente.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <div class="rule">
+      <strong>Advertencia sobre uso de inteligencia artificial:</strong> la IA puede apoyar la comprensión de conceptos y resolver dudas puntuales. No puede construir el diagrama ni diligenciar la plantilla en lugar del aprendiz. Si se detecta que la evidencia fue generada completamente por IA sin trabajo manual verificable, el aprendiz deberá realizar una actividad adicional de sustentación y ajuste manual.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="notice">
+      <strong>Reto final:</strong> identifica el caso de uso más crítico del sistema schedule-sena — aquel sin el cual el sistema no tendría sentido. Justifica tu elección en dos párrafos: ¿qué actor lo inicia, qué problema resuelve y por qué es el más importante para el contexto SENA?
+    </div>
+  </section>
+
+  <section class="section card">
+    <h2>Fuentes consultadas</h2>
+    <ul class="list-clean">
+      <li>Object Management Group · UML 2.5.1 specification overview.</li>
+      <li>Visual Paradigm · use case diagram guide and relationship concepts.</li>
+      <li>draw.io / diagrams.net · UML use case diagrams.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p><strong>Restricción académica:</strong> este material orienta el trabajo. El aprendiz debe construir manualmente los diagramas en draw.io/diagrams.net y diligenciar la documentación en Word usando la plantilla publicada. No se aceptan documentos completos generados por IA como evidencia principal.</p>
+  <p>© <span data-current-year></span> · Material de apoyo para ambiente de formación SENA.</p>
+</footer>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>

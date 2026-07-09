@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Landing 3 · Diagrama de clases</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <nav class="nav" aria-label="Navegación principal">
+    <a class="brand" href="index.html" aria-label="Inicio">
+      <span class="brand-mark">UML</span>
+      <span>Modelado SENA · schedule-sena</span>
+    </a>
+    <div class="nav-links">
+      <a href="landing-01-uml.html">1. UML</a>
+      <a href="landing-02-casos-uso.html">2. Casos de uso</a>
+      <a href="landing-03-clases.html">3. Clases</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero compact">
+  <div>
+    <span class="kicker">Landing 3 · Diseño estructural</span>
+    <h1>Diagrama de clases para schedule-sena</h1>
+    <p class="lead">El diagrama de clases representa la estructura estática del dominio: clases, atributos, operaciones, relaciones y multiplicidades. En este proyecto se parte de las entidades reales identificadas, sin inventar estructuras externas ni copiar tablas de base de datos automáticamente.</p>
+  </div>
+  <aside class="hero-card">
+    <h2>Enfoque</h2>
+    <p>Primero modelo conceptual desde el dominio, luego relaciones, después atributos y operaciones. No se empieza copiando código ni tablas completas del proyecto.</p>
+  </aside>
+</section>
+
+<main class="main">
+
+  <section class="section">
+    <h2>Conceptos técnicos del diagrama de clases</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Definición</th>
+            <th>Ejemplo en schedule-sena</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Clase</strong></td><td>Representación de un concepto del dominio con atributos y comportamiento propio.</td><td>Horario, Instructor, AmbienteFormacion</td></tr>
+          <tr><td><strong>Atributo</strong></td><td>Propiedad o dato que caracteriza a la clase.</td><td>fecha, horaInicio, capacidad, estado</td></tr>
+          <tr><td><strong>Método</strong></td><td>Comportamiento o responsabilidad de la clase en el dominio del negocio.</td><td>validarConflicto(), registrarObservacion()</td></tr>
+          <tr><td><strong>Asociación</strong></td><td>Relación entre clases que conservan independencia de ciclo de vida.</td><td>Horario asocia a Instructor</td></tr>
+          <tr><td><strong>Agregación</strong></td><td>Relación todo-parte donde la parte puede existir sin el todo.</td><td>ProgramaFormacion agrega Fichas</td></tr>
+          <tr><td><strong>Composición</strong></td><td>Relación todo-parte donde la parte no puede existir sin el todo.</td><td>A justificar según análisis del aprendiz</td></tr>
+          <tr><td><strong>Herencia</strong></td><td>Relación de generalización/especialización: la subclase hereda atributos y métodos.</td><td>A justificar si se identifican jerarquías en el proyecto</td></tr>
+          <tr><td><strong>Multiplicidad</strong></td><td>Cuántas instancias de una clase se relacionan con otra: 1, 0..1, 0..*, 1..*</td><td>1 Horario — 0..* Observaciones</td></tr>
+          <tr><td><strong>Visibilidad</strong></td><td>Nivel de acceso: + público, - privado, # protegido.</td><td>+ fecha, - id, # estado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section grid two">
+    <article class="card">
+      <h2>Clases candidatas del dominio</h2>
+      <p>Desde el backend inspeccionado y el contexto SENA se identifican estas clases candidatas para iniciar el modelado. El aprendiz debe justificar la inclusión o exclusión de cada una:</p>
+      <div>
+        <span class="badge green">Instructor</span>
+        <span class="badge green">Ficha</span>
+        <span class="badge green">AmbienteFormacion</span>
+        <span class="badge orange">Horario</span>
+        <span class="badge orange">Observacion</span>
+        <span class="badge">ProgramaFormacion</span>
+        <span class="badge gray">Disponibilidad</span>
+      </div>
+      <p class="small">Solo se incluye una clase si tiene responsabilidad propia identificable dentro del dominio del sistema. No agregar clases por convención o para completar un número.</p>
+    </article>
+    <article class="card">
+      <h2>Buenas técnicas de modelado</h2>
+      <ul class="list-clean">
+        <li>Partir de conceptos del dominio, no de pantallas ni tablas de base de datos.</li>
+        <li>Nombrar clases en singular: Instructor, no Instructores.</li>
+        <li>Evitar clases genéricas sin responsabilidad clara.</li>
+        <li>No inventar atributos que no estén confirmados en el proyecto.</li>
+        <li>Diferenciar asociación de composición con base en el ciclo de vida de las partes.</li>
+        <li>Validar multiplicidades contra las reglas de negocio identificadas.</li>
+        <li>No saturar el diagrama con getters, setters ni detalles de implementación.</li>
+        <li>Mantener trazabilidad: cada clase debe poder rastrearse a un caso de uso o regla del dominio.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="section">
+    <h2>Técnica incremental para construir el diagrama</h2>
+    <div class="flow">
+      <div class="flow-step"><span class="num">1</span><strong>Extraer sustantivos</strong><br>Ambiente, instructor, ficha, horario, observación del dominio.</div>
+      <div class="flow-step"><span class="num">2</span><strong>Validar dominio</strong><br>Quitar conceptos de pantalla, tecnología o infraestructura.</div>
+      <div class="flow-step"><span class="num">3</span><strong>Agregar atributos</strong><br>Solo los relevantes para comprender el modelo del negocio.</div>
+      <div class="flow-step"><span class="num">4</span><strong>Definir relaciones</strong><br>Asociación, composición, agregación o herencia con justificación.</div>
+      <div class="flow-step"><span class="num">5</span><strong>Validar reglas</strong><br>Conflictos, estados, inmutabilidad y multiplicidades correctas.</div>
+    </div>
+  </section>
+
+  <section class="section grid two">
+    <article class="card">
+      <h2>Ejemplo parcial — no es la solución</h2>
+      <div class="svg-panel" aria-label="Ejemplo parcial de diagrama de clases UML">
+        <svg viewBox="0 0 900 540" role="img" aria-hidden="true">
+          <rect x="55" y="50" width="210" height="148" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+          <rect x="55" y="50" width="210" height="40" rx="8" fill="#eaf6f4" stroke="#0f766e" stroke-width="2"/>
+          <text x="110" y="76" font-size="18" font-weight="800" fill="#115e59">Ambiente</text>
+          <line x1="55" y1="90" x2="265" y2="90" stroke="#0f766e"/>
+          <text x="72" y="116" font-size="13" fill="#162033">+ id : Long</text>
+          <text x="72" y="134" font-size="13" fill="#162033">+ codigo : String</text>
+          <text x="72" y="152" font-size="13" fill="#162033">+ capacidad : Integer</text>
+          <text x="72" y="170" font-size="13" fill="#162033">+ estado : String</text>
+          <rect x="335" y="50" width="210" height="148" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+          <rect x="335" y="50" width="210" height="40" rx="8" fill="#eaf6f4" stroke="#0f766e" stroke-width="2"/>
+          <text x="386" y="76" font-size="18" font-weight="800" fill="#115e59">Instructor</text>
+          <line x1="335" y1="90" x2="545" y2="90" stroke="#0f766e"/>
+          <text x="352" y="116" font-size="13" fill="#162033">+ id : Long</text>
+          <text x="352" y="134" font-size="13" fill="#162033">+ documento : String</text>
+          <text x="352" y="152" font-size="13" fill="#162033">+ nombre : String</text>
+          <text x="352" y="170" font-size="13" fill="#162033">+ tipoContrato : String</text>
+          <rect x="615" y="50" width="220" height="148" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+          <rect x="615" y="50" width="220" height="40" rx="8" fill="#eaf6f4" stroke="#0f766e" stroke-width="2"/>
+          <text x="682" y="76" font-size="18" font-weight="800" fill="#115e59">Ficha</text>
+          <line x1="615" y1="90" x2="835" y2="90" stroke="#0f766e"/>
+          <text x="632" y="116" font-size="13" fill="#162033">+ id : Long</text>
+          <text x="632" y="134" font-size="13" fill="#162033">+ codigo : String</text>
+          <text x="632" y="152" font-size="13" fill="#162033">+ numAprendices : Integer</text>
+          <text x="632" y="170" font-size="13" fill="#162033">+ estado : String</text>
+          <rect x="335" y="320" width="240" height="178" rx="8" fill="#ffffff" stroke="#f59e0b" stroke-width="2"/>
+          <rect x="335" y="320" width="240" height="40" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+          <text x="409" y="346" font-size="18" font-weight="800" fill="#92400e">Horario</text>
+          <line x1="335" y1="360" x2="575" y2="360" stroke="#f59e0b"/>
+          <text x="352" y="385" font-size="13" fill="#162033">+ fecha : Date</text>
+          <text x="352" y="403" font-size="13" fill="#162033">+ horaInicio : Time</text>
+          <text x="352" y="421" font-size="13" fill="#162033">+ horaFin : Time</text>
+          <text x="352" y="439" font-size="13" fill="#162033">+ estado : String</text>
+          <text x="352" y="460" font-size="13" fill="#64748b">+ validarConflicto()</text>
+          <line x1="160" y1="198" x2="398" y2="320" stroke="#64748b" stroke-width="2"/>
+          <text x="200" y="236" font-size="12" fill="#64748b">1</text>
+          <text x="373" y="315" font-size="12" fill="#64748b">0..*</text>
+          <line x1="440" y1="198" x2="453" y2="320" stroke="#64748b" stroke-width="2"/>
+          <text x="447" y="236" font-size="12" fill="#64748b">1</text>
+          <text x="458" y="315" font-size="12" fill="#64748b">0..*</text>
+          <line x1="725" y1="198" x2="520" y2="320" stroke="#64748b" stroke-width="2"/>
+          <text x="718" y="236" font-size="12" fill="#64748b">1</text>
+          <text x="528" y="315" font-size="12" fill="#64748b">0..*</text>
+        </svg>
+      </div>
+      <p class="small">Este ejemplo es intencionalmente incompleto. El aprendiz debe agregar Observacion, ProgramaFormacion y Disponibilidad con multiplicidades y operaciones justificadas desde su análisis propio.</p>
+    </article>
+    <article class="card">
+      <h2>Relaciones probables a validar</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Relación</th>
+              <th>Interpretación</th>
+              <th>Tipo UML sugerido</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Horario → AmbienteFormacion</td><td>Un horario se programa en un ambiente físico.</td><td>Asociación</td></tr>
+            <tr><td>Horario → Instructor</td><td>Un horario tiene asignado un instructor.</td><td>Asociación</td></tr>
+            <tr><td>Horario → Ficha</td><td>Un horario corresponde a una ficha específica.</td><td>Asociación</td></tr>
+            <tr><td>Horario → Observacion</td><td>Un horario puede tener observaciones registradas.</td><td>A justificar: asociación o composición</td></tr>
+            <tr><td>ProgramaFormacion → Ficha</td><td>Un programa tiene varias fichas activas.</td><td>Asociación o agregación</td></tr>
+            <tr><td>Instructor → Disponibilidad</td><td>Un instructor tiene disponibilidad horaria registrada.</td><td>Asociación o composición</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">No asumir composición sin justificar el ciclo de vida. En el backend, Observacion referencia a Horario y es inmutable una vez registrada.</p>
+    </article>
+  </section>
+
+  <section class="section card highlight">
+    <h2>Plantilla mínima para justificar clases</h2>
+    <p>Copiar en Word y diligenciar manualmente por cada clase incluida en el diagrama. No entregar como texto generado automáticamente.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Campo</th><th>Contenido que debe diligenciar el aprendiz</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Nombre de la clase</td><td>Concepto del dominio en singular, no nombre de pantalla.</td></tr>
+          <tr><td>Responsabilidad</td><td>Qué representa y qué papel cumple dentro del sistema schedule-sena.</td></tr>
+          <tr><td>Atributos principales</td><td>Solo los atributos relevantes para comprender el modelo del negocio.</td></tr>
+          <tr><td>Operaciones principales</td><td>Comportamientos del dominio; no incluir getters ni setters.</td></tr>
+          <tr><td>Relaciones</td><td>Clases relacionadas y tipo de relación (asociación, composición, herencia).</td></tr>
+          <tr><td>Multiplicidad</td><td>1, 0..1, 0..*, 1..* con justificación para cada extremo de la relación.</td></tr>
+          <tr><td>Reglas asociadas</td><td>Validaciones o restricciones del dominio observadas en el proyecto.</td></tr>
+          <tr><td>Origen</td><td>Caso de uso, entidad del proyecto o regla de negocio de donde proviene esta clase.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section card warning">
+    <h2>Taller 3 · Construcción del diagrama de clases</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Elemento SENA</th><th>Definición del taller</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Competencia</td><td>Pendiente: dato no suministrado.</td></tr>
+          <tr><td>RAP</td><td>Pendiente: dato no suministrado.</td></tr>
+          <tr><td>Actividad de aprendizaje</td><td>Elaborar en draw.io/diagrams.net el diagrama de clases inicial del proyecto schedule-sena, justificando la inclusión de cada clase, sus atributos, relaciones y multiplicidades.</td></tr>
+          <tr><td>Evidencias</td><td>1) Archivo .drawio con el diagrama de clases. 2) Exportación PDF o SVG. 3) Documento Word con la plantilla de justificación diligenciada manualmente para cada clase incluida.</td></tr>
+          <tr><td>Criterios de evaluación</td><td>Identifica clases reales del dominio; no modela pantallas como clases; usa atributos pertinentes; representa relaciones y multiplicidades correctas; justifica decisiones con base en el proyecto; conserva coherencia con los casos de uso construidos.</td></tr>
+          <tr><td>Instrumento de evaluación</td><td>Rúbrica de modelado estructural y lista de chequeo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="checklist">
+      <label><input type="checkbox"> El diagrama contiene clases del dominio y no solo tablas o pantallas.</label>
+      <label><input type="checkbox"> Cada clase tiene responsabilidad clara y nombre en singular.</label>
+      <label><input type="checkbox"> Las relaciones tienen multiplicidad con justificación.</label>
+      <label><input type="checkbox"> Las operaciones representan comportamiento real del dominio.</label>
+      <label><input type="checkbox"> La justificación de cada clase fue escrita manualmente por el aprendiz.</label>
+    </div>
+  </section>
+
+  <section class="section card">
+    <h2>Criterios de entrega</h2>
+    <ul class="list-clean">
+      <li>Archivo <code>.drawio</code> con el diagrama de clases completo.</li>
+      <li>Exportación del diagrama en formato PDF o SVG.</li>
+      <li>Documento Word con la plantilla de justificación diligenciada para cada clase incluida.</li>
+      <li>Las clases deben corresponder al dominio real del proyecto schedule-sena.</li>
+      <li>Las relaciones y multiplicidades deben estar justificadas con base en reglas del negocio.</li>
+      <li>La documentación debe ser redacción propia, coherente con los casos de uso de la Landing 2.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <div class="rule">
+      <strong>Advertencia sobre uso de inteligencia artificial:</strong> la IA puede apoyar la comprensión de conceptos UML y resolver dudas puntuales. No puede construir el diagrama ni diligenciar la justificación de clases en lugar del aprendiz. Si se detecta que la evidencia fue generada completamente por IA sin trabajo manual verificable, el aprendiz deberá realizar una actividad adicional de sustentación y ajuste manual.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="notice">
+      <strong>Reto final:</strong> revisa el diagrama de casos de uso que construiste en el taller anterior. ¿Cuántas clases adicionales podrías justificar a partir de esos casos de uso? Identifica al menos una clase nueva que no aparezca en las candidatas de esta landing y justifica su inclusión con base en el dominio del proyecto.
+    </div>
+  </section>
+
+  <section class="section card">
+    <h2>Fuentes consultadas</h2>
+    <ul class="list-clean">
+      <li>Object Management Group · UML 2.5.1 specification overview.</li>
+      <li>IBM Developer · UML 2 class diagram.</li>
+      <li>Lucidchart · UML class diagram relationships.</li>
+      <li>draw.io / diagrams.net · UML class diagrams.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p><strong>Restricción académica:</strong> este material orienta el trabajo. El aprendiz debe construir manualmente los diagramas en draw.io/diagrams.net y diligenciar la documentación en Word usando la plantilla publicada. No se aceptan documentos completos generados por IA como evidencia principal.</p>
+  <p>© <span data-current-year></span> · Material de apoyo para ambiente de formación SENA.</p>
+</footer>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
