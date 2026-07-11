@@ -1,0 +1,103 @@
+---------------------------------------------------------
+                SISTEMA DE ASISTENCIA SENA
+
+                    [ Logo SENA ]
+
+                 Iniciar Sesión
+
+Correo Institucional
++--------------------------------------+
+
+Contraseña
++--------------------------------------+
+
+        [ Iniciar Sesión ]
+
+¿Olvidó su contraseña?
+---------------------------------------------------------
+
+
+---------------------------------------------------------
+SISTEMA DE ASISTENCIA SENA
+
+Bienvenido: Juan Pérez (Instructor)
+
+---------------------------------------
+|   Menú                             |
+---------------------------------------
+| 📚 Mis Fichas                      |
+| 📋 Historial                       |
+| 👤 Mi Perfil                       |
+| 🚪 Cerrar Sesión                   |
+---------------------------------------
+
+Fichas asignadas
+
+---------------------------------------
+| ADSO-2876543        [Ingresar]      |
+| ADSO-2876500        [Ingresar]      |
+| ADSO-2900100        [Ingresar]      |
+---------------------------------------
+
+---------------------------------------------------------
+Sistema de Asistencia
+
+Ficha:
+ADSO-2876543
+
+Fecha:
+10/07/2026
+
+---------------------------------------------------------
+| Documento | Nombre          | Asistencia |
+---------------------------------------------------------
+| 12345     | Juan Méndez     | ☑ Presente |
+| 45678     | María López     | ☐ Ausente  |
+| 98765     | Carlos Pérez    | ☑ Presente |
+| 54321     | Ana Torres      | ☑ Presente |
+---------------------------------------------------------
+
+          [ Guardar Asistencia ]
+
+---------------------------------------------------------
+Historial de Asistencia
+
+Seleccione un aprendiz
+
+[ Juan Méndez ▼ ]
+
+-----------------------------------------------
+Fecha          Estado
+
+05/07/2026     Presente
+
+06/07/2026     Presente
+
+07/07/2026     Ausente
+
+08/07/2026     Presente
+-----------------------------------------------
+
+        [ Volver ]
+
+---------------------------------------------------------
+Generación de Reportes
+
+Fecha Inicio
+[ 01/07/2026 ]
+
+Fecha Fin
+[ 31/07/2026 ]
+
+Ficha
+[ ADSO-2876543 ▼ ]
+
+Tipo
+
+(•) General
+( ) Por aprendiz
+
+         [ Generar Reporte ]
+
+             [ Exportar PDF ]
+---------------------------------------------------------
