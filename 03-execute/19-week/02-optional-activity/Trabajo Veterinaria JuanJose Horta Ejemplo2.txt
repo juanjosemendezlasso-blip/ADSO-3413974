@@ -1,0 +1,679 @@
+Week 20
+    Apuntes: Juan José Horta Méndez
+	
+	    -Se debe implementar el moscou y el desingthink a el proyecto.
+		-Se debe presentar de forma (Diseño inverso) reverse design.
+		
+		
+		    Trabajo en clase; Ejercicio 2; 
+			-Hacer Modelo Entidad Relacion
+			-Moscow
+			-Diagrama Entidad Relacion
+			-Apoyarse En IA
+			-PDR; Transformar en desing thinkins.
+	-----------------------------------------------------------------------------
+	Case 2: Juan José Horta Méndez
+	Este proyecto consiste en construir un sistema CRUD con autenticación que modele el flujo real de una clínica veterinaria. La dificultad no está solo en crear las tablas y pantallas, sino en respetar las relaciones y reglas 
+	del negocio, especialmente:
+
+-La consulta es opcional respecto a la cita (permite identificar citas no atendidas).
+-Un tratamiento depende de un diagnóstico.
+-Una prescripción depende de un tratamiento y es opcional.
+-Un lote pertenece obligatoriamente a un medicamento y no puede usarse si está vencido.
+-
+Debe existir un reporte específico de citas que nunca generaron una consulta.
+	MoSCoW del proyecto
+🟥 Must Have (Imprescindible)
+
+Son funcionalidades sin las cuales el sistema no cumple el objetivo del PRD.
+| Requisito                                          | Justificación                                    |
+| ------------------------------------------  | ----------------------------------------------- |
+| Inicio de sesión con token                | Es el punto de entrada del sistema.              |
+| Gestión de propietarios                     | Toda mascota debe pertenecer a un propietario.   |
+| Gestión de mascotas                         | Es la entidad principal del sistema.             |
+| Agendar citas                                    |  Todo el flujo inicia con una cita.               |
+| Registrar consulta desde una cita atendida | Regla central del negocio (1:1 opcional).        |
+| Registrar diagnósticos                      | Una consulta debe poder generar diagnósticos.    |
+| Registrar tratamientos                       | Cada diagnóstico produce un tratamiento.         |
+| Registrar prescripciones cuando aplica     | El PRD indica que es opcional pero debe existir. |
+| Gestionar medicamentos                     | Catálogo obligatorio.                            |
+| Gestionar lotes                            | Necesarios para las prescripciones.              |
+| Reporte de citas sin consulta              | Es un requisito explícito del proyecto.          |
+| Contraseñas hasheadas                      | Requisito de seguridad.                          |
+| Validación de lote no vencido              | Regla crítica del negocio.                       |
+| Solo una consulta por cita                 | Restricción obligatoria.                         |
+
+
+🟨 Should Have (Debería tener)
+
+Son importantes para entregar un buen sistema, aunque el flujo principal podría existir sin ellas.
+
+| Requisito                                   | Justificación                                                   |
+| ------------------------------------------- | --------------------------------------------------------------- |
+| Operaciones atómicas (transacciones)        | Evitan inconsistencias al registrar consultas y prescripciones. |
+| Backend, Frontend y Base de Datos separados | Mejora el mantenimiento del proyecto.                           |
+| Mensajes en español                         | Mejora la experiencia del usuario.                              |
+| Fechas en formato local                     | Facilita el uso del sistema.                                    |
+
+🟩 Could Have (Podría tener)
+
+El PRD no incluye funcionalidades opcionales adicionales. Para mantenernos fieles al documento, esta categoría queda vacía.
+
+⬛ Won't Have (No se implementará en esta versión)
+
+Tampoco hay elementos que el PRD descarte explícitamente, pero sí podemos indicar lo que no forma parte del MVP:
+
+Múltiples roles de usuario (solo existe un rol: Recepcionista/Veterinario).
+Facturación.
+Pagos.
+Inventario distinto al catálogo de medicamentos y lotes.
+Agenda para propietarios.
+Recordatorios automáticos.
+Historial financiero.
+Notificaciones por correo o SMS.
+
+Estas funcionalidades simplemente no aparecen en el PRD, por lo que no deben considerarse parte del alcance del MVP.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+MER (Modelo Entidad-Relación): identifica las entidades, atributos y relaciones.
+DER (Diagrama Entidad-Relación): es el dibujo del MER con cardinalidades, entidad débil, etc.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Modelo Entidad-Relación (MER)
+Entidades y atributos
+
+1. Owner (Propietario)
+
+PK: document
+
+Atributos:
+
+name
+phone
+-----------------------
+2. Pet (Mascota)
+
+PK: clinical_code
+
+Atributos:
+
+name
+birth_date
+
+FK:
+
+owner_document
+-----------------------
+3. Appointment (Cita)
+
+PK: code
+
+Atributos:
+
+date
+reason
+
+FK:
+
+clinical_code
+professional_card
+-----------------------
+4. Veterinarian (Veterinario)
+
+PK: professional_card
+
+Atributos:
+
+name
+specialty
+-----------------------
+5. Consultation (Consulta)
+
+PK: sequential
+
+Atributos:
+
+date
+weight
+
+FK
+
+appointment_code
+
+Relación 1:1 opcional con Appointment.
+-----------------------
+6. Diagnosis (Diagnóstico)
+
+PK: code
+
+Atributos:
+
+description
+severity_level
+
+FK
+
+consultation_sequential
+-----------------------
+7. Treatment (Tratamiento)
+
+PK: id (puede ser un identificador técnico)
+
+Atributos:
+
+start_date
+duration
+instructions
+
+FK
+
+diagnosis_code
+-----------------------
+8. Prescription (Prescripción)
+
+PK: id
+
+Atributos:
+
+dose
+frequency
+administration_route
+
+FK
+
+treatment_id
+medication_code
+lot_number
+-----------------------
+9. Medication (Medicamento)
+
+PK: code
+
+Atributos:
+
+name
+concentration
+-----------------------
+10. Lot (Lote)
+
+PK compuesta
+
+medication_code
+lot_number
+
+Atributos:
+
+expiration_date
+available_quantity
+
+Es una entidad débil, ya que depende de Medication para existir.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Relaciones;
+| Entidad A    | Relación      | Entidad B    | Cardinalidad |
+| ------------ | ------------- | ------------ | ------------ |
+| Owner        | posee         | Pet          | 1 : N        |
+| Pet          | tiene         | Appointment  | 1 : N        |
+| Veterinarian | atiende       | Appointment  | 1 : N        |
+| Appointment  | genera        | Consultation | 1 : 0..1     |
+| Consultation | produce       | Diagnosis    | 1 : N        |
+| Diagnosis    | genera        | Treatment    | 1 : 1        |
+| Treatment    | puede generar | Prescription | 1 : 0..1     |
+| Prescription | referencia    | Medication   | N : 1        |
+| Medication   | posee         | Lot          | 1 : N        |
+| Prescription | utiliza       | Lot          | N : 1        |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Reglas del modelo;
+Un propietario puede tener muchas mascotas.
+Una mascota pertenece a un único propietario.
+Una mascota puede tener muchas citas.
+Un veterinario puede atender muchas citas.
+Una cita puede no generar una consulta.
+Una consulta pertenece a una única cita.
+Una consulta puede tener varios diagnósticos.
+Cada diagnóstico genera un tratamiento.
+Un tratamiento puede o no generar una prescripción.
+Cada prescripción referencia un medicamento y un lote.
+Un lote pertenece obligatoriamente a un medicamento.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Product Requirements Document (PRD)
+Sistema de Gestión para Clínica Veterinaria
+Versión;
+
+1.0
+
+Fecha;
+
+1 de Agosto de 2026
+
+Estado;
+
+En desarrollo
+
+1. Introducción
+Propósito
+
+Desarrollar un sistema web para gestionar la atención clínica de mascotas, permitiendo administrar propietarios, mascotas, citas, consultas, diagnósticos, tratamientos, medicamentos y lotes, garantizando el seguimiento del historial médico de cada paciente.
+
+Objetivo del producto
+
+Automatizar los procesos principales de una clínica veterinaria para reducir el manejo manual de información, mejorar el control de las consultas médicas y facilitar la administración de medicamentos.
+
+2. Problema
+
+Actualmente muchas clínicas veterinarias llevan el control de pacientes mediante hojas de cálculo o registros físicos, ocasionando:
+
+pérdida de información
+dificultad para consultar historiales médicos
+errores al registrar tratamientos
+escaso control de medicamentos
+poca trazabilidad de las citas realizadas
+
+El sistema busca centralizar toda esta información en una única plataforma.
+
+3. Alcance
+
+El sistema permitirá:
+
+autenticación de usuarios
+administración de propietarios
+administración de mascotas
+programación de citas
+registro de consultas
+registro de diagnósticos
+creación de tratamientos
+administración de medicamentos
+administración de lotes
+generación de reportes
+
+No se incluirán procesos de facturación, pagos ni notificaciones automáticas en esta versión.
+
+4. Usuarios
+Recepcionista
+
+Responsable de:
+
+registrar propietarios
+registrar mascotas
+programar citas
+consultar información
+Veterinario
+
+Responsable de:
+
+atender consultas
+registrar diagnósticos
+crear tratamientos
+emitir prescripciones
+consultar historiales médicos
+
+5. Requisitos funcionales
+ID	Requisito
+RF-01	Iniciar sesión mediante autenticación por token.
+RF-02	Registrar, consultar, actualizar y eliminar propietarios.
+RF-03	Registrar, consultar, actualizar y eliminar mascotas.
+RF-04	Agendar citas veterinarias.
+RF-05	Registrar consultas únicamente cuando la cita sea atendida.
+RF-06	Registrar uno o varios diagnósticos por consulta.
+RF-07	Registrar tratamientos asociados a un diagnóstico.
+RF-08	Registrar prescripciones cuando el tratamiento requiera medicamentos.
+RF-09	Administrar medicamentos.
+RF-10	Administrar lotes de medicamentos.
+RF-11	Consultar el historial clínico de una mascota.
+RF-12	Generar reporte de citas sin consulta.
+
+6. Requisitos no funcionales
+Backend desarrollado en Go.
+Frontend desarrollado en Angular.
+Base de datos PostgreSQL.
+Contenedores Docker Compose.
+Contraseñas almacenadas mediante hash.
+Uso de transacciones para operaciones críticas.
+Acceso mediante autenticación.
+Validaciones de integridad de datos.
+
+7. Reglas de negocio
+Un propietario puede tener varias mascotas.
+Cada mascota pertenece a un único propietario.
+Una mascota puede tener múltiples citas.
+Una cita solo puede generar una consulta.
+Una consulta puede registrar múltiples diagnósticos.
+Cada diagnóstico genera un tratamiento.
+Un tratamiento puede tener una prescripción.
+Una prescripción debe referenciar un medicamento y un lote válido.
+No se pueden utilizar lotes vencidos.
+Un lote pertenece obligatoriamente a un medicamento.
+
+8.Flujo Principal
+
+Inicio de sesión
+        │
+        ▼
+Registrar propietario
+        │
+        ▼
+Registrar mascota
+        │
+        ▼
+Agendar cita
+        │
+        ▼
+Atender consulta
+        │
+        ▼
+Registrar diagnóstico
+        │
+        ▼
+Crear tratamiento
+        │
+        ▼
+¿Requiere medicamentos?
+      │          │
+     No         Sí
+      │          ▼
+      │   Crear prescripción
+      │          │
+      └──────────▼
+          Fin del proceso
+		  
+9. Criterios de aceptación
+°El usuario puede iniciar sesión correctamente.
+°No es posible registrar una consulta sin una cita previa.
+°No es posible registrar más de una consulta por cita.
+°El sistema valida que los lotes no estén vencidos.
+°Cada mascota conserva su historial clínico.
+°El reporte de citas sin consulta se genera correctamente.
+°Todas las operaciones críticas mantienen la consistencia de los datos.
+
+10. Tecnologías
+
+| Componente    | Tecnología     |
+| ------------- | -------------- |
+| Backend       | Go             |
+| Frontend      | Angular        |
+| Base de datos | PostgreSQL     |
+| Contenedores  | Docker Compose |
+| Autenticación | JWT            |
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                             Design Thinking
+							 
+Proyecto: Sistema de Gestión para Clínica Veterinaria
+
+1. Empatizar (Empathize)
+Usuarios involucrados
+
+Recepcionista
+Necesita registrar propietarios, mascotas y programar citas de manera rápida para evitar largas esperas.
+
+Veterinario
+Necesita acceder al historial clínico de las mascotas y registrar consultas, diagnósticos y tratamientos de forma organizada.
+
+Propietario de la mascota
+Busca una atención rápida, segura y un seguimiento adecuado del tratamiento de su mascota.
+
+Necesidades identificadas;
+°Acceder fácilmente a la información clínica.
+°Evitar pérdida de datos.
+°Registrar consultas de manera sencilla.
+°Controlar medicamentos disponibles.
+°Consultar el historial médico de cada mascota.
+°Reducir tiempos de atención.
+°Problemas detectados
+°Información almacenada en papel.
+°Historiales difíciles de consultar.
+°Errores en el registro de tratamientos.
+°Falta de control de medicamentos y lotes.
+°Duplicidad de información.
+
+2. Definir (Define)
+Problema principal
+Las clínicas veterinarias requieren una herramienta que centralice toda la información de propietarios, mascotas y consultas para mejorar la atención médica y reducir errores administrativos.
+Objetivo
+Diseñar un sistema web que permita administrar el proceso completo de atención veterinaria, desde el registro de una mascota hasta el seguimiento de su tratamiento.
+
+3. Idear (Ideate)
+Propuesta de solución
+Desarrollar un sistema web compuesto por los siguientes módulos:
+
+°Inicio de sesión
+°Gestión de propietarios
+°Gestión de mascotas
+°Agenda de citas
+°Registro de consultas
+°Diagnósticos
+°Tratamientos
+°Prescripciones
+°Medicamentos
+°Lotes
+°Reportes
+°Ideas de mejora
+°Buscador rápido de mascotas.
+°Historial clínico centralizado.
+°Alertas por medicamentos vencidos.
+°Reporte de citas no atendidas.
+°Panel principal con estadísticas.
+
+4. Prototipar (Prototype)
+Pantallas propuestas
+Inicio de sesión
+Dashboard principal
+Gestión de propietarios
+Gestión de mascotas
+Agenda de citas
+Registro de consultas
+Diagnósticos
+Tratamientos
+Medicamentos
+Lotes
+Reportes
+
+Flujo del usuario
+
+Login
+   │
+   ▼
+Dashboard
+   │
+   ├───────────────┐
+   ▼               ▼
+Propietarios    Medicamentos
+   │               │
+   ▼               ▼
+Mascotas        Lotes
+   │
+   ▼
+Citas
+   │
+   ▼
+Consulta
+   │
+   ▼
+Diagnóstico
+   │
+   ▼
+Tratamiento
+   │
+   ▼
+Prescripción
+
+5. Evaluar (Test)
+Escenarios de prueba
+Escenario 1
+Registrar un nuevo propietario.
+Resultado esperado
+El sistema guarda correctamente la información.
+
+Escenario 2
+Registrar una mascota.
+Resultado esperado
+La mascota queda asociada al propietario.
+
+Escenario 3
+Crear una cita.
+Resultado esperado
+La cita aparece en la agenda.
+
+Escenario 4
+Registrar una consulta.
+Resultado esperado
+Solo puede realizarse si existe una cita previa.
+
+Escenario 5
+Registrar una prescripción.
+Resultado esperado
+El sistema valida que el lote no esté vencido.
+
+Escenario 6
+Consultar historial médico.
+Resultado esperado
+Se muestran todas las consultas, diagnósticos y tratamientos de la mascota.
+
+Beneficios esperados;
+
+Menor tiempo de atención.
+Información centralizada.
+Mejor seguimiento de pacientes.
+Control de medicamentos.
+Reducción de errores administrativos.
+Historial clínico disponible en tiempo real.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Diagrama UML de Casos de Uso
+Como el sistema tiene un único actor principal (Recepcionista/Veterinario), el diagrama puede quedar así:
+
+                           +-----------------------------------------------+
+                           | Sistema de Gestión Veterinaria                |
+                           |                                               |
+                           | (Iniciar sesión)                              |
+                           | (Gestionar propietarios)                      |
+                           | (Gestionar mascotas)                          |
+                           | (Gestionar citas)                             |
+                           | (Registrar consulta)                          |
+                           | (Registrar diagnóstico)                       |
+                           | (Registrar tratamiento)                       |
+                           | (Registrar prescripción)                      |
+                           | (Gestionar medicamentos)                      |
+                           | (Gestionar lotes)                             |
+                           | (Consultar historial clínico)                 |
+                           | (Generar reporte de citas sin consulta)       |
+                           +-----------------------------------------------+
+                                       ^
+                                       |
+                          Recepcionista / Veterinario
+						  
+2. Especificación de Casos de Uso
+
+CU-01 – Iniciar sesión
+Campo	Descripción
+Actor	Recepcionista / Veterinario
+Objetivo	                 Acceder al sistema mediante autenticación.
+Precondición	         El usuario está registrado.
+Flujo principal	1.      Ingresa usuario y contraseña.
+2. El sistema valida las credenciales.
+3. Se genera un token.
+4. Se muestra el Dashboard.
+Flujo alterno	        Credenciales incorrectas.
+Postcondición	        Usuario autenticado.
+
+CU-02 – Gestionar Propietarios
+Campo	Descripción
+Actor	          Recepcionista
+Objetivo	                Registrar y administrar propietarios.
+Precondición	        Usuario autenticado.
+Flujo principal	        Crear, consultar, editar y eliminar propietarios.
+Flujo alterno	        Documento ya registrado.
+Postcondición	        Información actualizada.
+
+CU-03 – Gestionar Mascotas
+Campo	Descripción
+Actor	            Recepcionista
+Objetivo	               Registrar mascotas asociadas a un propietario.
+Precondición	       Debe existir un propietario.
+Flujo principal	       Registrar mascota y asociarla al propietario.
+Flujo alterno	       El propietario no existe.
+Postcondición	       Mascota registrada.
+
+CU-04 – Gestionar Citas
+Campo	Descripción
+Actor	          Recepcionista
+Objetivo	            Programar citas veterinarias.
+Precondición	    Mascota registrada.
+Flujo principal	    Seleccionar mascota, veterinario, fecha y motivo.
+Flujo alterno	    Fecha no disponible.
+Postcondición  	Cita creada.
+
+CU-05 – Registrar Consulta
+Campo	Descripción
+Actor	          Veterinario
+Objetivo	             Registrar la atención médica de una cita.
+Precondición	     Existe una cita y no tiene consulta registrada.
+Flujo principal	     Registrar peso, observaciones y guardar la consulta.
+Flujo alterno	     La cita ya tiene consulta.
+Postcondición	     Consulta almacenada.
+
+CU-06 – Registrar Diagnóstico
+Campo	Descripción
+Actor	        Veterinario
+Objetivo	            Registrar uno o varios diagnósticos.
+Precondición	    Existe una consulta.
+Flujo principal	     Agregar código, descripción y gravedad.
+Flujo alterno	     Datos incompletos.
+Postcondición	     Diagnósticos registrados.
+
+CU-07 – Registrar Tratamiento
+Campo	Descripción
+Actor	              Veterinario
+Objetivo	            Crear el tratamiento correspondiente al diagnóstico.
+Precondición	    Existe un diagnóstico.
+Flujo principal	    Registrar duración, fecha de inicio e instrucciones.
+Flujo alterno	    Diagnóstico inexistente.
+Postcondición	    Tratamiento creado.
+
+CU-08 – Registrar Prescripción
+Campo	              Descripción
+Actor	                 Veterinario
+Objetivo	              Prescribir medicamentos cuando el tratamiento lo requiera.
+Precondición	       Existe un tratamiento y un lote disponible.
+Flujo principal	       Seleccionar medicamento, lote, dosis, frecuencia y vía de administración.
+Flujo alterno	       Lote vencido o sin existencias.
+Postcondición	       Prescripción registrada.
+
+CU-09 – Gestionar Medicamentos
+Campo	Descripción
+Actor	Recepcionista / Veterinario
+Objetivo	Administrar el catálogo de medicamentos.
+Precondición	      Usuario autenticado.
+Flujo principal	      Crear, consultar, editar y eliminar medicamentos.
+Flujo alterno	      Código duplicado.
+Postcondición	      Catálogo actualizado.
+
+CU-10 – Gestionar Lotes
+Campo	Descripción
+Actor	Recepcionista / Veterinario
+Objetivo	                 Administrar los lotes de medicamentos.
+Precondición	         Existe un medicamento.
+Flujo principal	         Registrar número de lote, vencimiento y cantidad.
+Flujo alterno	         Lote duplicado para el mismo medicamento.
+Postcondición	         Lote almacenado.
+
+CU-11 – Consultar Historial Clínico
+Campo	Descripción
+Actor	Veterinario
+Objetivo	                      Visualizar el historial médico de una mascota.
+Precondición	               La mascota está registrada.
+Flujo principal	               Buscar la mascota y consultar sus consultas, diagnósticos y tratamientos.
+Flujo alterno	               La mascota no existe.
+Postcondición	               Historial mostrado.
+
+CU-12 – Generar Reporte de Citas sin Consulta
+Campo	Descripción
+Actor	Recepcionista / Veterinario
+Objetivo	                    Identificar las citas que no fueron atendidas.
+Precondición             	Existen citas registradas.
+Flujo principal	            Seleccionar la opción de reportes y generar el listado.
+Flujo alterno	            No existen citas pendientes.
+Postcondición	            Reporte generado.
+
+
